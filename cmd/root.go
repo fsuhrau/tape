@@ -33,10 +33,10 @@ var rootCmd = &cobra.Command{
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if cmd.Flag("version").Value.String() == "true" {
-			fmt.Printf("version: %s\n", repository.VERSION)
+			fmt.Printf("version: %s\n", repository.Version)
 			return nil
 		}
-		return repository.MissingParameter
+		return repository.ErrMissingParameter
 	},
 }
 

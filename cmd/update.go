@@ -25,7 +25,7 @@ var updateCmd = &cobra.Command{
 	Short: "",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 2 {
-			return repository.MissingParameter
+			return repository.ErrMissingParameter
 		}
 		repo, err := repository.Load()
 		if err != nil {
