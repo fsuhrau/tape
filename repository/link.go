@@ -10,10 +10,12 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/mitchellh/go-homedir"
 )
 
 func TapeHome() string {
-	homeDir := os.Getenv("HOME")
+	homeDir, _ := homedir.Dir()
 	return filepath.Join(homeDir, ".tape")
 }
 
