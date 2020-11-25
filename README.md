@@ -16,8 +16,7 @@ tape is a small tool to manage command line dependencies in your project dir
 ## Installation
 ### from source
 ``` bash
-$ go get -u github.com/fsuhrau/tape
-$ go install github.com/fsuhrau/tape
+$ go get -u -v github.com/fsuhrau/tape
 ```
 
 ## usage
