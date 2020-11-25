@@ -24,7 +24,6 @@ var linkCmd = &cobra.Command{
 	Use:   "link",
 	Short: "link all current dependencies into .bin/",
 	RunE: func(cmd *cobra.Command, args []string) error {
-
 		repo, err := repository.Load()
 		if err != nil {
 			return err

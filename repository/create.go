@@ -6,20 +6,20 @@ import (
 )
 
 func Create(repositoryURL string) error {
-	if _, err := os.Stat(DIR); !os.IsNotExist(err) {
-		return TapeAlreadyInitialized
+	if _, err := os.Stat(Dir); !os.IsNotExist(err) {
+		return ErrTapeAlreadyInitialized
 	}
 
-	if _, err := os.Stat(filepath.Join(DIR, CONFIG)); !os.IsNotExist(err) {
-		return TapeAlreadyInitialized
+	if _, err := os.Stat(filepath.Join(Dir, Config)); !os.IsNotExist(err) {
+		return ErrTapeAlreadyInitialized
 	}
 
-	if err := os.MkdirAll(DIR, os.ModePerm); err != nil {
+	if err := os.MkdirAll(Dir, 0755); err != nil {
 		return err
 	}
 
 	repo := Repository{
-		Version: VERSION,
+		Version: Version,
 		URL:     repositoryURL,
 	}
 

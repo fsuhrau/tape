@@ -26,7 +26,7 @@ var initCmd = &cobra.Command{
 	Long:  `will create a new tape dependency folder`,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		if len(args) == 0 {
-			return repository.MissingParameter
+			return repository.ErrMissingParameter
 		}
 
 		return repository.Create(args[0])

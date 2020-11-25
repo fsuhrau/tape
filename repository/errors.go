@@ -1,12 +1,14 @@
 package repository
 
-import "fmt"
+import (
+	"errors"
+)
 
 var (
-	MissingParameter        = fmt.Errorf("missing parameter")
-	TapeAlreadyInitialized  = fmt.Errorf("tape is already initialized")
-	TapeNotInitialized      = fmt.Errorf("tape is not initialized")
-	DependencyAlreadyExists = fmt.Errorf("dependency already exists try update instead")
-	DependencyNotFound      = fmt.Errorf("dependency not found add instead")
-	FileMistmatch           = fmt.Errorf("file mismatch")
+	ErrMissingParameter        = errors.New("missing parameter")
+	ErrTapeAlreadyInitialized  = errors.New("tape is already initialized")
+	ErrTapeNotInitialized      = errors.New("tape is not initialized")
+	ErrDependencyAlreadyExists = errors.New("dependency already exists try update instead")
+	ErrDependencyNotFound      = errors.New("dependency not found add instead")
+	ErrFileMismatch            = errors.New("file mismatch")
 )

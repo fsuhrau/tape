@@ -8,9 +8,9 @@ import (
 )
 
 func Load() (*Repository, error) {
-	repositoryConfigFile := filepath.Join(DIR, CONFIG)
+	repositoryConfigFile := filepath.Join(Dir, Config)
 	if _, err := os.Stat(repositoryConfigFile); os.IsNotExist(err) {
-		return nil, TapeNotInitialized
+		return nil, ErrTapeNotInitialized
 	}
 
 	repositoryData, err := ioutil.ReadFile(repositoryConfigFile)

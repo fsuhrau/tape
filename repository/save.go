@@ -7,9 +7,10 @@ import (
 )
 
 func (r *Repository) Save() error {
-	data, err := json.MarshalIndent(r, "", " ")
+	data, err := json.MarshalIndent(r, "", "  ")
 	if err != nil {
 		return err
 	}
-	return ioutil.WriteFile(filepath.Join(DIR, "config"), data, 0644)
+
+	return ioutil.WriteFile(filepath.Join(Dir, Config), data, 0755)
 }

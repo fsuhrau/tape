@@ -20,15 +20,14 @@ func TapeHome() string {
 }
 
 func LinksDir() string {
-	return filepath.Join(DIR, "links")
+	return filepath.Join(Dir, "links")
 }
 
 func (r *Repository) Link() error {
-
 	tapeSharedRepoDir := TapeHome()
 
 	if _, err := os.Stat(tapeSharedRepoDir); os.IsNotExist(err) {
-		if err := os.MkdirAll(tapeSharedRepoDir, os.ModePerm); err != nil {
+		if err := os.MkdirAll(tapeSharedRepoDir, 0755); err != nil {
 			return err
 		}
 	}
@@ -47,7 +46,7 @@ func (r *Repository) Link() error {
 
 		if needsDownload {
 			tapeTmpDir := filepath.Join(os.TempDir(), "tape", dep.Name)
-			if err := os.MkdirAll(tapeTmpDir, os.ModePerm); err != nil {
+			if err := os.MkdirAll(tapeTmpDir, 0755); err != nil {
 				return err
 			}
 
@@ -62,18 +61,22 @@ func (r *Repository) Link() error {
 			}
 
 			if dep.Hash != hash {
-				return FileMistmatch
+				return ErrFileMismatch
 			}
 
-			if err := os.MkdirAll(depDir, os.ModePerm); err != nil {
+			if err := os.MkdirAll(depDir, 0755); err != nil {
 				return err
 			}
 
 			switch dep.Type {
 			case Directory:
-				unzip(tmpDownloadFileName, tapeRepoDep)
+				if err := unzip(tmpDownloadFileName, tapeRepoDep); err != nil {
+					return err
+				}
 			case Executable:
-				move(tmpDownloadFileName, tapeRepoDep)
+				if err := move(tmpDownloadFileName, tapeRepoDep); err != nil {
+					return err
+				}
 			}
 		}
 
@@ -89,7 +92,7 @@ func (d *Dependency) Link() error {
 	linkSource := filepath.Join(TapeHome(), d.Hash, d.Name)
 
 	if _, err := os.Stat(repoLinks); os.IsNotExist(err) {
-		if err := os.MkdirAll(repoLinks, os.ModePerm); err != nil {
+		if err := os.MkdirAll(repoLinks, 0755); err != nil {
 			return err
 		}
 	}
@@ -119,17 +122,17 @@ func (d *Dependency) Unlink() error {
 }
 
 func unzip(zipFile, destination string) error {
-
 	var filenames []string
 
 	r, err := zip.OpenReader(zipFile)
 	if err != nil {
 		return err
 	}
-	defer r.Close()
+	defer func() {
+		_ = r.Close()
+	}()
 
 	for _, f := range r.File {
-
 		fpath := filepath.Join(destination, f.Name)
 
 		if !strings.HasPrefix(fpath, filepath.Clean(destination)+string(os.PathSeparator)) {
@@ -139,11 +142,13 @@ func unzip(zipFile, destination string) error {
 		filenames = append(filenames, fpath)
 
 		if f.FileInfo().IsDir() {
-			os.MkdirAll(fpath, os.ModePerm)
+			if err := os.MkdirAll(fpath, 0755); err != nil {
+				return err
+			}
 			continue
 		}
 
-		if err = os.MkdirAll(filepath.Dir(fpath), os.ModePerm); err != nil {
+		if err = os.MkdirAll(filepath.Dir(fpath), 0755); err != nil {
 			return err
 		}
 
@@ -155,13 +160,15 @@ func unzip(zipFile, destination string) error {
 			if err != nil {
 				return err
 			}
-			defer rc.Close()
+			defer func() {
+				_ = rc.Close()
+			}()
 
 			if _, err := io.Copy(writer, rc); err != nil {
 				return err
 			}
 
-			if err := ioutil.WriteFile(fpath, buffer.Bytes(), os.ModePerm); err != nil {
+			if err := ioutil.WriteFile(fpath, buffer.Bytes(), 0755); err != nil {
 				return err
 			}
 			return err

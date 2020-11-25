@@ -1,9 +1,9 @@
 package repository
 
 const (
-	DIR     = ".tape"
-	VERSION = "1.0"
-	CONFIG  = "config"
+	Dir     = ".tape"
+	Version = "1.0"
+	Config  = "config"
 )
 
 type Type int
