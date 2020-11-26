@@ -114,7 +114,7 @@ func AddAuthFromNetrc(rawurl string, req *http.Request) *http.Request {
 	}
 
 	for _, m := range netrc {
-		if u.Host == m.machine {
+		if u.Hostname() == m.machine {
 			req.SetBasicAuth(m.login, m.password)
 			break
 		}
