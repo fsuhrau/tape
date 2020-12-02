@@ -18,6 +18,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/fsuhrau/tape/plugin"
 	"github.com/fsuhrau/tape/repository"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
@@ -25,6 +26,7 @@ import (
 )
 
 var cfgFile string
+var pluginLoader plugin.Loader
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -43,6 +45,11 @@ var rootCmd = &cobra.Command{
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
+	pluginLoader = plugin.Loader{}
+	if err := pluginLoader.LoadPlugins(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
